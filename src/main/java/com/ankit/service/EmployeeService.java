@@ -41,8 +41,6 @@ public class EmployeeService {
 			updatedEmployee = empRepository.save(updatedEmployee);
 		}
 		return updatedEmployee;
-		//Integer updatedEmployeeStatus = empRepository.updateEmployee(employee.getName(), employee.getEmail(), empId);
-		//return updatedEmployeeStatus;
 	}
 	
 	public void deleteEmployee(int id) {
