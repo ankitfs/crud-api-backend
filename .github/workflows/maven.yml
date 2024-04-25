@@ -33,8 +33,6 @@ jobs:
       name: Build and push Docker Image
       with:
         image: ankitfs/ankit-private
-        tags: crud-api-v1
-        registry: registry-url.io
-        dockerfile: Dockerfile.ci
+        registry: docker.io
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
