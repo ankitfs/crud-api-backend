@@ -41,4 +41,4 @@ jobs:
       - name: Delete Old Container
         run: docker rm -f springboot-crud-application
       - name: Run docker container
-        run: docker -d -p 8080:8080 --name springboot-crud-application ankitfs/crudapplication
+        run: docker run -d -p 8080:8080 --name springboot-crud-application ankitfs/crudapplication
