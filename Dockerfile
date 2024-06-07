@@ -1,6 +1,5 @@
-FROM openjdk:17-alpine
-VOLUME [ "/tmp" ]
+FROM openjdk:21
+WORKDIR /app
+COPY target/crudapplication.jar crudapplication.jar
 EXPOSE 8080
-ARG JAR_FILE=target/crudapplication.jar
-ADD ${JAR_FILE} app.jar
-ENTRYPOINT [ "java", "-jar", "/app.jar" ]
+CMD ["java", "-jar", "crudapplication.jar"]
