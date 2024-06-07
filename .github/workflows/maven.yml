@@ -34,7 +34,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: [aws-ec2]
+    runs-on: [self-hosted]
     steps:
       - name: Pull Image from DockerHub
         run: docker pull ankitfs/crudapplication:latest
