@@ -3,47 +3,80 @@ package com.ankit.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.ankit.dto.CreateEmployeeRequestDTO;
+import com.ankit.dto.EmployeeResponseDTO;
+import com.ankit.dto.ListEmployeesResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ankit.entity.Employee;
+import com.ankit.entity.EmployeeEntity;
 import com.ankit.repository.EmployeeRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class EmployeeService {
 
 	@Autowired
 	private EmployeeRepository empRepository;
 	
-	public Employee createEmployee(Employee employee) {
-				
-		Employee createdEmployee = empRepository.save(employee);
-		
-		return createdEmployee;
-	}
-	
-	public List<Employee> listAllEmployees() {
-		return empRepository.findAll();
-	}
-	
-	public Optional<Employee> findEmployeeById(int id) {
-		return empRepository.findById(id);
-	}
-	
-	public Employee updateEmployee(Employee employee) {
-		Optional<Employee> existingEmployee = findEmployeeById(employee.getId());
-		Employee updatedEmployee = null;
-		if(existingEmployee.isPresent()) {
-			updatedEmployee = existingEmployee.get();
-			updatedEmployee.setName(employee.getName());
-			updatedEmployee.setEmail(employee.getEmail());
-			
-			updatedEmployee = empRepository.save(updatedEmployee);
+	public EmployeeResponseDTO createEmployee(CreateEmployeeRequestDTO employeeDTO) throws Exception{
+
+		EmployeeEntity employeeEntity = EmployeeMapper.dtoToEmployeeEntity(employeeDTO);
+
+		Optional<EmployeeEntity> employeeExists = empRepository.findByEmail(employeeDTO.getEmail());
+
+		if(!employeeExists.isPresent()) {
+			employeeEntity = empRepository.save(employeeEntity);
 		}
-		return updatedEmployee;
+
+
+		return EmployeeMapper.entityToEmployeeDTO(employeeEntity);
 	}
 	
-	public void deleteEmployee(int id) {
-		empRepository.deleteById(id);
+	public ListEmployeesResponseDTO listAllEmployees() throws Exception{
+		ListEmployeesResponseDTO employeesResponse = new ListEmployeesResponseDTO();
+		List<EmployeeEntity> employeeEntityList = empRepository.findAll();
+		employeesResponse.setNoOfEmployees(employeeEntityList.size());
+		List<EmployeeResponseDTO> employeesDTOList = employeeEntityList.stream().
+							map(employeeEntity -> {
+								EmployeeResponseDTO empDTO = new EmployeeResponseDTO();
+								empDTO.setName(employeeEntity.getName());
+								empDTO.setEmail(employeeEntity.getEmail());
+								empDTO.setCreatedDate(employeeEntity.getCreatedAt());
+								return empDTO;
+							}).toList();
+		employeesResponse.setEmployeesList(employeesDTOList);
+
+		return employeesResponse;
+	}
+	
+	public EmployeeResponseDTO findEmployeeById(String email) throws Exception{
+		EmployeeResponseDTO responseDTO = new EmployeeResponseDTO();
+		Optional<EmployeeEntity> employeeEntity = empRepository.findByEmail(email);
+		if(employeeEntity.isPresent()) {
+			responseDTO = EmployeeMapper.entityToEmployeeDTO(employeeEntity.get());
+		}
+
+		return responseDTO;
+	}
+	
+	public EmployeeResponseDTO updateEmployee(CreateEmployeeRequestDTO employeeRequestDTO) throws Exception{
+		EmployeeEntity updatedEmployee = null;
+		EmployeeResponseDTO employeeResponseDTO = new EmployeeResponseDTO();
+		Optional<EmployeeEntity> existingEmployee = empRepository.findByEmail(employeeRequestDTO.getEmail());
+		if(existingEmployee.isPresent()) {
+			updatedEmployee = EmployeeMapper.dtoToEmployeeEntity(employeeRequestDTO);
+			updatedEmployee.setId(existingEmployee.get().getId());
+
+			updatedEmployee = empRepository.save(updatedEmployee);
+
+			employeeResponseDTO = EmployeeMapper.entityToEmployeeDTO(updatedEmployee);
+		}
+		return employeeResponseDTO;
+	}
+	
+	public void deleteEmployee(String email) throws Exception{
+		empRepository.deleteByEmail(email);
 	}
 }

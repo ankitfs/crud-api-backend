@@ -1,7 +1,8 @@
 package com.ankit.controller;
 
-import java.util.List;
-
+import com.ankit.dto.CreateEmployeeRequestDTO;
+import com.ankit.dto.EmployeeResponseDTO;
+import com.ankit.dto.ListEmployeesResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ankit.entity.Employee;
 import com.ankit.service.EmployeeService;
 
 @RestController
@@ -22,27 +22,61 @@ public class EmployeeController {
 	
 
 	@GetMapping("/employees")
-	public List<Employee> employeesList() {		
-		return empService.listAllEmployees();
+	public ListEmployeesResponseDTO employeesList() {
+		ListEmployeesResponseDTO listEmployeesResponseDTO = null;
+		try {
+			listEmployeesResponseDTO = empService.listAllEmployees();
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			listEmployeesResponseDTO = new ListEmployeesResponseDTO();
+		}
+		return listEmployeesResponseDTO;
 	}
 	
 	@PostMapping("/employee")
-	public Employee createEmployeeHandler(@RequestBody Employee employeeBody) {
-		return empService.createEmployee(employeeBody);
+	public EmployeeResponseDTO createEmployeeHandler(@RequestBody CreateEmployeeRequestDTO employeeRequestDTO) {
+		EmployeeResponseDTO responseDTO = new EmployeeResponseDTO();
+		try {
+			responseDTO = empService.createEmployee(employeeRequestDTO);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return responseDTO;
 	}
 	
 	@PutMapping("/employee")
-	public Employee updateEmployeeHandler(@RequestBody Employee employeeBody) {
-		return empService.updateEmployee(employeeBody);
+	public EmployeeResponseDTO updateEmployeeHandler(@RequestBody CreateEmployeeRequestDTO employeeRequestDTO) {
+		EmployeeResponseDTO employeeResponseDTO = new EmployeeResponseDTO();
+		try {
+			employeeResponseDTO = empService.updateEmployee(employeeRequestDTO);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return employeeResponseDTO;
 	}
 	
-	@GetMapping("/employee/{id}")
-	public Employee retrieveEmployee(@PathVariable("id") Integer employeeid) {
-		return empService.findEmployeeById(employeeid).get();
+	@GetMapping("/employee/{email}")
+	public EmployeeResponseDTO retrieveEmployee(@PathVariable("email") String employeeEmail) {
+		EmployeeResponseDTO employeeResponseDTO = new EmployeeResponseDTO();
+		try {
+			employeeResponseDTO = empService.findEmployeeById(employeeEmail);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return employeeResponseDTO;
 	}
 	
-	@DeleteMapping("/employee/{id}")
-	public void deleteEmployee(@PathVariable("id") Integer employeeid) {
-		empService.deleteEmployee(employeeid);
+	@DeleteMapping("/employee/{email}")
+	public void deleteEmployee(@PathVariable("email") String employeeEmail) {
+		try {
+			empService.deleteEmployee(employeeEmail);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 }
