@@ -2,6 +2,7 @@ package com.ankit.service;
 
 import com.ankit.dto.CreateEmployeeRequestDTO;
 import com.ankit.entity.EmployeeEntity;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +28,18 @@ class EmployeeMapperTest {
         assertEquals(createEmployeeDTO.getName(), employeeEntity.getName());
         assertEquals(createEmployeeDTO.getEmail(), employeeEntity.getEmail());
         assertNull(employeeEntity.getCreatedAt());
+    }
+
+    @Test
+    @DisplayName("This test will throw NullPointer Exception when DTO is null")
+    public void should_throw_npe_when_dto_is_null() {
+        //given
+        CreateEmployeeRequestDTO createEmployeeRequestDTO = null;
+
+        //then
+        var exp = Assertions.assertThrows(NullPointerException.class, () -> EmployeeMapper.dtoToEmployeeEntity(createEmployeeRequestDTO));
+
+        assertEquals("Employee DTO cannot be null", exp.getMessage());
     }
 
 

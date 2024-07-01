@@ -6,7 +6,7 @@ import com.ankit.entity.EmployeeEntity;
 
 public class EmployeeMapper {
 
-    public static EmployeeResponseDTO entityToEmployeeDTO(EmployeeEntity entity) throws Exception{
+    public static EmployeeResponseDTO entityToEmployeeDTO(EmployeeEntity entity) {
         EmployeeResponseDTO employeeResponseDTO = new EmployeeResponseDTO();
         employeeResponseDTO.setName(entity.getName());
         employeeResponseDTO.setEmail(entity.getEmail());
@@ -15,7 +15,10 @@ public class EmployeeMapper {
         return employeeResponseDTO;
     }
 
-    public static EmployeeEntity dtoToEmployeeEntity(CreateEmployeeRequestDTO employeeDTO) throws Exception{
+    public static EmployeeEntity dtoToEmployeeEntity(CreateEmployeeRequestDTO employeeDTO) {
+        if(employeeDTO == null) {
+            throw new NullPointerException("Employee DTO cannot be null");
+        }
         EmployeeEntity entity = new EmployeeEntity();
         entity.setName(employeeDTO.getName());
         entity.setEmail(employeeDTO.getEmail());
