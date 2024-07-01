@@ -40,11 +40,14 @@ public class EmployeeService {
 		employeesResponse.setNoOfEmployees(employeeEntityList.size());
 		List<EmployeeResponseDTO> employeesDTOList = employeeEntityList.stream().
 							map(employeeEntity -> {
-								EmployeeResponseDTO empDTO = new EmployeeResponseDTO();
-								empDTO.setName(employeeEntity.getName());
-								empDTO.setEmail(employeeEntity.getEmail());
-								empDTO.setCreatedDate(employeeEntity.getCreatedAt());
-								return empDTO;
+								EmployeeResponseDTO employeeResponseDTO = null;
+								try {
+									employeeResponseDTO = EmployeeMapper.entityToEmployeeDTO(employeeEntity);
+								}
+								catch (Exception ex) {
+									throw new RuntimeException(ex.getMessage());
+								}
+								return employeeResponseDTO;
 							}).toList();
 		employeesResponse.setEmployeesList(employeesDTOList);
 

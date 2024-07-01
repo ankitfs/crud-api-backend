@@ -30,6 +30,16 @@ public class EmployeeEntity {
 	@UpdateTimestamp
 	private Timestamp updatedAt;
 
+	public EmployeeEntity() {}
+
+	public EmployeeEntity(int id, String name, String mail, Timestamp createdDate, Timestamp updatedDate) {
+		this.id = id;
+		this.name = name;
+		this.email = mail;
+		this.createdAt = createdDate;
+		this.updatedAt = updatedDate;
+	}
+
 	public int getId() {
 		return id;
 	}
