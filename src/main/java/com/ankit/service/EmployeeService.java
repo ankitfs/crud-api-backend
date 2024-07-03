@@ -19,19 +19,21 @@ public class EmployeeService {
 
 	@Autowired
 	private EmployeeRepository empRepository;
+
+	@Autowired
+	private EmployeeMapper employeeMapper;
 	
 	public EmployeeResponseDTO createEmployee(CreateEmployeeRequestDTO employeeDTO) throws Exception{
 
-		EmployeeEntity employeeEntity = EmployeeMapper.dtoToEmployeeEntity(employeeDTO);
+		EmployeeEntity employeeEntity = employeeMapper.dtoToEmployeeEntity(employeeDTO);
 
 		Optional<EmployeeEntity> employeeExists = empRepository.findByEmail(employeeDTO.getEmail());
 
-		if(!employeeExists.isPresent()) {
+		if(!employeeExists.isEmpty()) {
 			employeeEntity = empRepository.save(employeeEntity);
 		}
 
-
-		return EmployeeMapper.entityToEmployeeDTO(employeeEntity);
+		return employeeMapper.entityToEmployeeDTO(employeeEntity);
 	}
 	
 	public ListEmployeesResponseDTO listAllEmployees() throws Exception{
@@ -42,7 +44,7 @@ public class EmployeeService {
 //				map(employeeEntity -> {
 //					return EmployeeMapper.entityToEmployeeDTO(employeeEntity);
 //				}).toList();
-				map(EmployeeMapper::entityToEmployeeDTO).toList();
+				map(employeeMapper::entityToEmployeeDTO).toList();
 		employeesResponse.setEmployeesList(employeesDTOList);
 
 		return employeesResponse;
@@ -52,7 +54,7 @@ public class EmployeeService {
 		EmployeeResponseDTO responseDTO = new EmployeeResponseDTO();
 		Optional<EmployeeEntity> employeeEntity = empRepository.findByEmail(email);
 		if(employeeEntity.isPresent()) {
-			responseDTO = EmployeeMapper.entityToEmployeeDTO(employeeEntity.get());
+			responseDTO = employeeMapper.entityToEmployeeDTO(employeeEntity.get());
 		}
 
 		return responseDTO;
@@ -63,12 +65,12 @@ public class EmployeeService {
 		EmployeeResponseDTO employeeResponseDTO = new EmployeeResponseDTO();
 		Optional<EmployeeEntity> existingEmployee = empRepository.findByEmail(employeeRequestDTO.getEmail());
 		if(existingEmployee.isPresent()) {
-			updatedEmployee = EmployeeMapper.dtoToEmployeeEntity(employeeRequestDTO);
+			updatedEmployee = employeeMapper.dtoToEmployeeEntity(employeeRequestDTO);
 			updatedEmployee.setId(existingEmployee.get().getId());
 
 			updatedEmployee = empRepository.save(updatedEmployee);
 
-			employeeResponseDTO = EmployeeMapper.entityToEmployeeDTO(updatedEmployee);
+			employeeResponseDTO = employeeMapper.entityToEmployeeDTO(updatedEmployee);
 		}
 		return employeeResponseDTO;
 	}

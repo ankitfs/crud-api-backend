@@ -3,10 +3,12 @@ package com.ankit.service;
 import com.ankit.dto.CreateEmployeeRequestDTO;
 import com.ankit.dto.EmployeeResponseDTO;
 import com.ankit.entity.EmployeeEntity;
+import org.springframework.stereotype.Component;
 
+@Component
 public class EmployeeMapper {
 
-    public static EmployeeResponseDTO entityToEmployeeDTO(EmployeeEntity entity) {
+    public EmployeeResponseDTO entityToEmployeeDTO(EmployeeEntity entity) {
         EmployeeResponseDTO employeeResponseDTO = new EmployeeResponseDTO();
         employeeResponseDTO.setName(entity.getName());
         employeeResponseDTO.setEmail(entity.getEmail());
@@ -15,7 +17,7 @@ public class EmployeeMapper {
         return employeeResponseDTO;
     }
 
-    public static EmployeeEntity dtoToEmployeeEntity(CreateEmployeeRequestDTO employeeDTO) {
+    public EmployeeEntity dtoToEmployeeEntity(CreateEmployeeRequestDTO employeeDTO) {
         if(employeeDTO == null) {
             throw new NullPointerException("Employee DTO cannot be null");
         }

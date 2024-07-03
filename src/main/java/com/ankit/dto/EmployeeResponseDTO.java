@@ -9,8 +9,10 @@ import java.sql.Timestamp;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeResponseDTO extends CreateEmployeeRequestDTO{
+public class EmployeeResponseDTO {
 
+    String name;
+    String email;
     Timestamp createdDate;
 
 }
