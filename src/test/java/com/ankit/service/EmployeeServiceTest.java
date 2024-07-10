@@ -5,6 +5,7 @@ import com.ankit.dto.EmployeeResponseDTO;
 import com.ankit.entity.EmployeeEntity;
 import com.ankit.repository.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -38,6 +39,7 @@ class EmployeeServiceTest {
     }
 
     @Test
+    @DisplayName("This test will save student entity when student dto is provided")
     public void should_save_student_entity_when_student_dto_given() throws Exception{
         //Given
         var employeeDTO = new CreateEmployeeRequestDTO(
