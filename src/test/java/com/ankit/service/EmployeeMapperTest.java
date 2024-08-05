@@ -4,7 +4,6 @@ import com.ankit.dto.CreateEmployeeRequestDTO;
 import com.ankit.dto.EmployeeResponseDTO;
 import com.ankit.entity.EmployeeEntity;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,16 +14,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EmployeeMapperTest {
 
-    private EmployeeMapper employeeMapper;
+    private EmployeeMapper employeeMapper = new EmployeeMapper();
 
-    @BeforeAll
-    void beforeAll() {
-        employeeMapper = new EmployeeMapper();
-    }
+//    @BeforeAll
+//    void beforeAll() {
+//        employeeMapper = new EmployeeMapper();
+//    }
 
     @Test
     @DisplayName("This test returns Employee Entity when DTO was provided")
-    public void should_retunEntity_when_DTO_Provided() throws Exception{
+    public void should_returnEntity_when_DTO_Provided() throws Exception{
 
         //Given
         CreateEmployeeRequestDTO createEmployeeDTO =
