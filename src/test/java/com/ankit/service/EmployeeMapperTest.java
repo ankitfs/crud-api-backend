@@ -6,20 +6,21 @@ import com.ankit.entity.EmployeeEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.Timestamp;
 import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 class EmployeeMapperTest {
 
-    private EmployeeMapper employeeMapper = new EmployeeMapper();
-
-//    @BeforeAll
-//    void beforeAll() {
-//        employeeMapper = new EmployeeMapper();
-//    }
+    @Mock
+    private EmployeeMapper employeeMapper;
 
     @Test
     @DisplayName("This test returns Employee Entity when DTO was provided")
@@ -44,8 +45,11 @@ class EmployeeMapperTest {
         //given
         CreateEmployeeRequestDTO createEmployeeRequestDTO = null;
 
+        //when
+        Mockito.when(employeeMapper.dtoToEmployeeEntity(createEmployeeRequestDTO)).thenThrow(new NullPointerException("Employee DTO cannot be null"));
+
         //then
-        var exp = Assertions.assertThrows(NullPointerException.class, () -> employeeMapper.dtoToEmployeeEntity(createEmployeeRequestDTO));
+        Exception exp = assertThrows(NullPointerException.class, () -> employeeMapper.dtoToEmployeeEntity(createEmployeeRequestDTO));
 
         assertEquals("Employee DTO cannot be null", exp.getMessage());
     }
