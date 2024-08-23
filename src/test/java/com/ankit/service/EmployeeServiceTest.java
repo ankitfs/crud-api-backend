@@ -122,7 +122,7 @@ class EmployeeServiceTest {
     }
 
     @Test
-    public void should_find_employee_when_employeeid_provided() throws Exception{
+    public void should_find_employee_when_employee_email_provided() throws Exception{
         //Given
         EmployeeEntity employee5 = new EmployeeEntity(5,
                                                     "Reena Yadav",
@@ -187,5 +187,23 @@ class EmployeeServiceTest {
 
         //Then
         assertEquals(employeeRequestDTO.getName(), employeeResponseDTO.getName());
+    }
+
+    @Test
+    @DisplayName("This will will delete an employee")
+    public void should_delete_an_employee() throws Exception{
+        //Given
+        String email = "reena@gmail.com";
+
+        EmployeeEntity existingEmployeeEntity = EmployeeEntity.builder().id(5).name("Reena Yadav").email("reena@gmail.com").build();
+
+        when(employeeRepository.findByEmail(email)).thenReturn(Optional.of(existingEmployeeEntity));
+
+
+        //When
+        doNothing().when(employeeRepository).delete(existingEmployeeEntity);
+
+        //Then
+        assertAll(() -> employeeService.deleteEmployee(email));
     }
 }

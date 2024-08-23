@@ -2,6 +2,7 @@ package com.ankit.entity;
 
 import java.sql.Timestamp;
 
+import lombok.Builder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.lang.NonNull;
@@ -12,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@Builder
 public class EmployeeEntity {
 
 	@Id
