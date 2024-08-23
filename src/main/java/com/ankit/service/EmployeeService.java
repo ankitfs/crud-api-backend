@@ -40,11 +40,7 @@ public class EmployeeService {
 		ListEmployeesResponseDTO employeesResponse = new ListEmployeesResponseDTO();
 		List<EmployeeEntity> employeeEntityList = empRepository.findAll();
 		employeesResponse.setNoOfEmployees(employeeEntityList.size());
-		List<EmployeeResponseDTO> employeesDTOList = employeeEntityList.stream().
-//				map(employeeEntity -> {
-//					return EmployeeMapper.entityToEmployeeDTO(employeeEntity);
-//				}).toList();
-				map(employeeMapper::entityToEmployeeDTO).toList();
+		List<EmployeeResponseDTO> employeesDTOList = employeeEntityList.stream().map(employeeMapper::entityToEmployeeDTO).toList();
 		employeesResponse.setEmployeesList(employeesDTOList);
 
 		return employeesResponse;
@@ -61,21 +57,21 @@ public class EmployeeService {
 	}
 	
 	public EmployeeResponseDTO updateEmployee(CreateEmployeeRequestDTO employeeRequestDTO) throws Exception{
-		EmployeeEntity updatedEmployee = null;
-		EmployeeResponseDTO employeeResponseDTO = new EmployeeResponseDTO();
-		Optional<EmployeeEntity> existingEmployee = empRepository.findByEmail(employeeRequestDTO.getEmail());
-		if(existingEmployee.isPresent()) {
-			updatedEmployee = employeeMapper.dtoToEmployeeEntity(employeeRequestDTO);
-			updatedEmployee.setId(existingEmployee.get().getId());
 
-			updatedEmployee = empRepository.save(updatedEmployee);
+		EmployeeEntity existingEmployee = empRepository.findByEmail(employeeRequestDTO.getEmail()).orElseThrow(()
+											-> new NullPointerException("Employee Not Found having email :" +
+												employeeRequestDTO.getEmail()));
 
-			employeeResponseDTO = employeeMapper.entityToEmployeeDTO(updatedEmployee);
-		}
-		return employeeResponseDTO;
+		existingEmployee = employeeMapper.dtoToEmployeeEntity(employeeRequestDTO);
+
+		EmployeeEntity updatedEmployee = empRepository.save(existingEmployee);
+
+        return employeeMapper.entityToEmployeeDTO(updatedEmployee);
 	}
 	
 	public void deleteEmployee(String email) throws Exception{
-		empRepository.deleteByEmail(email);
+		EmployeeEntity existingEmployee = empRepository.findByEmail(email).orElseThrow(() -> new NullPointerException("Employee Not Found having email:" + email));
+
+		empRepository.delete(existingEmployee);
 	}
 }

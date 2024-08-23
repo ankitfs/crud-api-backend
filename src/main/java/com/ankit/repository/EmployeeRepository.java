@@ -11,6 +11,4 @@ public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Intege
 
     Optional<EmployeeEntity> findByEmail(String email) throws Exception;
 
-    Long deleteByEmail(String email) throws Exception;
-
 }
