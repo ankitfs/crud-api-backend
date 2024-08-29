@@ -15,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -65,7 +64,7 @@ class EmployeeServiceTest {
                                 Timestamp.valueOf(LocalDateTime.now()));
 
         when(employeeRepository.findByEmail(employeeDTO.getEmail())).thenReturn(existsEmployeeEntity);
-        when(employeeMapper.dtoToEmployeeEntity(employeeDTO)).thenReturn(employeeEntity);
+        when(employeeMapper.dtoToEmployeeEntity(employeeDTO, employeeEntity)).thenReturn(employeeEntity);
         when(employeeRepository.save(employeeEntity)).thenReturn(employeeEntity);
         when(employeeMapper.entityToEmployeeDTO(employeeEntity)).thenReturn(employeeResponseDTO);
 
@@ -83,10 +82,10 @@ class EmployeeServiceTest {
         CreateEmployeeRequestDTO employeeDTO = null;
 
         //when
-        when(employeeMapper.dtoToEmployeeEntity(employeeDTO)).thenThrow(new NullPointerException("Employee DTO cannot be null"));
+        when(employeeMapper.dtoToEmployeeEntity(employeeDTO, null)).thenThrow(new NullPointerException("Employee DTO cannot be null"));
 
         //then
-        Exception exception = assertThrows(NullPointerException.class, () -> employeeMapper.dtoToEmployeeEntity(employeeDTO));
+        Exception exception = assertThrows(NullPointerException.class, () -> employeeMapper.dtoToEmployeeEntity(employeeDTO, null));
 
         //var exp = Assertions.assertThrows(NullPointerException.class, () -> employeeMapper.dtoToEmployeeEntity(createEmployeeRequestDTO));
 
@@ -177,7 +176,7 @@ class EmployeeServiceTest {
 
         //Mock the Calls
         when(employeeRepository.findByEmail(employeeRequestDTO.getEmail())).thenReturn(Optional.of(existingEmployee));
-        when(employeeMapper.dtoToEmployeeEntity(employeeRequestDTO)).thenReturn(existingEmployee);
+        when(employeeMapper.dtoToEmployeeEntity(employeeRequestDTO, existingEmployee)).thenReturn(existingEmployee);
         when(employeeRepository.save(existingEmployee)).thenReturn(updatedEmployeeEntity);
         when(employeeService.updateEmployee(employeeRequestDTO)).thenReturn(employeeResponse);
 

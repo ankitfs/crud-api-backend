@@ -17,11 +17,11 @@ public class EmployeeMapper {
         return employeeResponseDTO;
     }
 
-    public EmployeeEntity dtoToEmployeeEntity(CreateEmployeeRequestDTO employeeDTO) {
+    public EmployeeEntity dtoToEmployeeEntity(CreateEmployeeRequestDTO employeeDTO, EmployeeEntity callerEntity) {
         if(employeeDTO == null) {
             throw new NullPointerException("Employee DTO cannot be null");
         }
-        EmployeeEntity entity = new EmployeeEntity();
+        EmployeeEntity entity =  callerEntity == null ? new EmployeeEntity() : callerEntity;
         entity.setName(employeeDTO.getName());
         entity.setEmail(employeeDTO.getEmail());
         return entity;
